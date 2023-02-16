@@ -1,0 +1,15 @@
+---
+title: "Analysis.Rmd"
+author: "Braeden Grenier"
+date: "2023-02-14"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+read.csv("Sequences")
+```
+

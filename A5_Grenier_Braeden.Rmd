@@ -1,0 +1,99 @@
+---
+title: "Analysis.Rmd"
+author: "Braeden Grenier"
+date: "2023-02-14"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(lubridate)
+library(tidyr)
+library(data.table)
+library(gridExtra)
+library(lmtest)
+library(MuMIn)
+library(MASS)
+```
+
+# 4. Importing Sequences
+```{r}
+mydata = read.csv("Sequences")
+print(mydata)
+?bind_rows
+
+seq1 = c(mydata$Name[2:8])
+seq1
+seq2 = c(mydata$Name[11:17])
+seq2
+seq3 = c(mydata$Name[20:26])
+seq3
+```
+
+Can't get the regex expressions or anything to work
+```{r}
+sequence1 = "AGCATGCAAGTCAAACGAGATGTAGCAATACATCTAGTGGCGAACGGGTGAGTAACGCGTGGATGATCTACCTATGAGATGGGGATAACTATTAGAAATAGTAGCTAATACCGAATAAGGTCAATTAATTTGTTAATTGATGAAAGGAAGCCTTTAAAGCTTCGCTTGTAGATGAGTCTGCGTCTTATTAGTTAGTTGGTAGGGTAAATGCCTACCAAGGCGATGATAAGTAACCGGCCTGAGAGGGTGAACGGTCACACTGGAACTGAGACACGGTCCAGACTCCTACGGGAGGCAGCAGCTAAGAATCTTCCGCAATGGGCGAAAGCCTGACGGAGCGACACTGCGTGAATGAAGAAGGTCGAAAGATTGTAAAATTCTTTTATAAATGAGGAATAAGCTTTGTAGGAAATGACGAAGTGATGACGTTAATTTATGAATAAGCCCCGGCTAATTACGTGCCAGCAGCCGCGGTAATACG"
+
+sequence2 = "AGCATGCAAGTCAAACGGGATGTAGCAATACATTCAGTGGCGAACGGGTGAGTAACGCGTGGATGATCTACCTATGAGATGGGGATAACTATTAGAAATAGTAGCTAATACCGAATAAGGTCAGTTAATTTGTTAATTGATGAAAGGAAGCCTTTAAAGCTTCGCTTGTAGATGAGTCTGCGTCTTATTAGCTAGTTGGTAGGGTAAATGCCTACCAAGGCAATGATAAGTAACCGGCCTGAGAGGGTGAACGGTCACACTGGAACTGAGATACGGTCCAGACTCCTACGGGAGGCAGCAGCTAAGAATCTTCCGCAATGGGCGAAAGCCTGACGGAGCGACACTGCGTGAATGAAGAAGGTCGAAAGATTGTAAAATTCTTTTATAAATGAGGAATAAGCTTTGTAGGAAATGACAAAGTGATGACGTTAATTTATGAATAAGCCCCGGCTAATTACGTGCCAGCAGCAGCGGTAATACG"
+
+sequence3 = "AGCATGCAAGTCAAACGAGATGTAGTAATACATCTAGTGGCGAACGGGTGAGTAACGCGTGGATGATCTACCTATGAGATGGGGATAACTATTAGAAATAGTAGCTAATACCGAATAAGGTCAATTAATTTGTTAATTGATGAAAGGAAGCCTTTAAAGCTTCGCTTGTAGATGAGTCTGCGTCTTATTAGTTAGTTGGTAGGGTAAATGCCTACCAAGGCGATGATAAGTAACCGGCCTGAGAGGGTGAACGGTCACACTGGAACTGAGACACGGTCCAGACTCCTACGGGAGGCAGCAGCTAAGAATCTTCCGCAATGGGCGAAAGCCTGACGGAGCGACACTGCGTGAATGAAGAAGGTCGAAAGATTGTAAAATTCTTTTATAAATGAGGAATAAGCTTTGTAGGAAATGACGAAGTGATGACGTTAATTTATGAATAAGCCCCGGCTAATTACGTGCCAGCAGCCGCGGTAATACG"
+
+seqdata = c(sequence1, sequence2, sequence3)
+sequencenumber = c(1,2,3)
+
+newdata = data.frame(sequencenumber, seqdata)
+print(newdata)
+
+grep("A", sequence1)
+```
+
+```{r}
+a1 = str_count(sequence1, "A")
+c1 = str_count(sequence1, "C")
+t1 = str_count(sequence1, "T")
+g1 =str_count(sequence1, "G")
+frame1 = data.frame(Base = c("A", "C", "T", "G"), Occurences = c(a1,c1,t1,g1))
+
+a2 = str_count(sequence2, "A")
+c2 = str_count(sequence2, "C")
+t2 = str_count(sequence2, "T")
+g2 = str_count(sequence2, "G")
+frame2 = data.frame(Base = c("A", "C", "T", "G"), Occurences = c(a2,c2,t2,g2))
+
+a3 = str_count(sequence3, "A")
+c3 = str_count(sequence3, "C")
+t3 = str_count(sequence3, "T")
+g3 = str_count(sequence3, "G")
+frame3 = data.frame(Base = c("A", "C", "T", "G"), Occurences = c(a3,c3,t3,g3))
+```
+
+```{r}
+print(frame1)
+print(frame2)
+print(frame3)
+```
+
+https://en.wikipedia.org/wiki/Borrelia_burgdorferi
+```{r}
+knitr::include_graphics("https://en.wikipedia.org/wiki/Borrelia_burgdorferi#/media/File:Borrelia_burgdorferi_(CDC-PHIL_-6631)_lores.jpg")
+```
+
+GC content
+```{r}
+seq1GC = ((c1 + g1)/(a1+c1+g1+t1))*100
+print(seq1GC)
+
+seq2GC = ((c2 + g2)/(a2+c2+g2+t2))*100
+print(seq2GC)
+
+seq3GC = ((c3 + g3)/(a3+c3+g3+t3))*100
+print(seq1GC)
+
+SequenceID = c("HQ433692.1", "HQ433694.1", "HQ433691.1")
+GC_Content = c(seq1GC,seq2GC,seq2GC)
+print(data.frame(SequenceID, GC_Content))
+```
